@@ -1,38 +1,37 @@
-trigger:
+trigger: 
 - main
 
 pool:
   vmImage: 'ubuntu-latest'
 
 stages:
-- stage: Plan
-  displayName: 'Terraform Plan'
+- stage: Build
   jobs:
-  - job: TerraformPlan
-    displayName: 'Terraform Plan'
+  - job: Build
     steps:
-    - task: TerraformInstaller@0
+    - task: TerraformTaskV4@4
+      displayName: Terraform init
       inputs:
-        terraformVersion: 'latest'
+        provider: 'azurerm'
+        command: 'init'
+        backendServiceArm: 'subscription1'  # Azure 서비스 연결 이름
+        backendAzureRmResourceGroupName: 'test_rg'  # 리소스 그룹 이름
+        backendAzureRmStorageAccountName: 'test_storageAccount'  # 스토리지 계정 이름
+        backendAzureRmContainerName: 'tfstate'  # 컨테이너 이름
+        backendAzureRmKey: 'prod.terraform.tfstate'  # 상태 파일 키
 
-    - script: |
-        terraform --version
-        terraform init -backend-config="storage_account_name=$(storageAccountName)" -backend-config="container_name=$(containerName)" -backend-config="key=$(key)" -backend-config="access_key=$(accessKey)"
-        terraform plan -out=tfplan
-      displayName: 'Terraform Init and Plan'
-
-- stage: Deploy
-  displayName: 'Terraform Apply'
-  jobs:
-  - job: TerraformApply
-    displayName: 'Terraform Apply'
-    steps:
-    - task: TerraformInstaller@0
+    - task: TerraformTaskV4@4
+      displayName: Terraform plan
       inputs:
-        terraformVersion: 'latest'
+        provider: 'azurerm'
+        command: 'plan'
+        environmentServiceNameAzureRM: 'subscription1'  # Azure 서비스 연결 이름
+        commandOptions: '-out=tfplan'  # 계획 결과를 파일로 저장
 
-    - script: |
-        terraform --version
-        terraform init -backend-config="storage_account_name=$(storageAccountName)" -backend-config="container_name=$(containerName)" -backend-config="key=$(key)" -backend-config="access_key=$(accessKey)"
-        terraform apply -auto-approve tfplan
-      displayName: 'Terraform Init and Apply'
+    - task: TerraformTaskV4@4
+      displayName: Terraform apply
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        environmentServiceNameAzureRM: 'subscription1'  # Azure 서비스 연결 이름
+        commandOptions: '-auto-approve tfplan'  # 자동 승인 및 계획 파일 사용

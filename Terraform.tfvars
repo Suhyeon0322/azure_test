@@ -1,0 +1,2 @@
+prefix = "Test"
+location = "koreacentral"
