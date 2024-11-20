@@ -32,6 +32,7 @@ stages:
         provider: 'azurerm'
         command: 'plan'
         environmentServiceNameAzureRM: 'test_serviceConnection'  # Azure 서비스 연결 이름
+        additionalArguments: '-lock=false'
 
     - task: TerraformTaskV4@4
       displayName: Terraform apply
