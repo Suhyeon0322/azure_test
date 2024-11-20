@@ -1,5 +1,5 @@
 trigger: 
-- main
+- none
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -8,15 +8,21 @@ stages:
 - stage: Build
   jobs:
   - job: Build
+    continueOnError: false
     steps:
+    - task: TerraformInstaller@0
+      displayName: Terraform install
+      inputs:
+        terraformVersion: 'latest'
+
     - task: TerraformTaskV4@4
       displayName: Terraform init
       inputs:
         provider: 'azurerm'
         command: 'init'
         backendServiceArm: 'test_serviceConnection'  # Azure 서비스 연결 이름
-        backendAzureRmResourceGroupName: 'test_rg'  # 리소스 그룹 이름
-        backendAzureRmStorageAccountName: 'test_storageAccount'  # 스토리지 계정 이름
+        backendAzureRmResourceGroupName: 'test_rg1'  # 리소스 그룹 이름
+        backendAzureRmStorageAccountName: 'testsa150'  # 스토리지 계정 이름
         backendAzureRmContainerName: 'tfstate'  # 컨테이너 이름
         backendAzureRmKey: 'prod.terraform.tfstate'  # 상태 파일 키
 

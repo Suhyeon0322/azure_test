@@ -7,8 +7,8 @@ terraform {
   }
 
   backend "azurerm" {
-    resource_group_name  = "test_rg" 
-    storage_account_name = "test_storageAccount"                      
+    resource_group_name  = "test_rg1" 
+    storage_account_name = "testsa150"                      
     container_name       = "tfstate"                      
     key                  = "prod.terraform.tfstate"        
   }
@@ -20,29 +20,24 @@ provider "azurerm" {
   subscription_id = "b8d06fc7-c92e-4a44-8a98-597f53734a95"  # subscription1
 }
 
-resource "azurerm_resource_group" "example" {
-  name     = "${var.prefix}-resources"
-  location = var.location
-}
-
 resource "azurerm_virtual_network" "main" {
   name                = "${var.prefix}-network"
   address_space       = ["10.0.0.0/16"]
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+  location            = var.location
+  resource_group_name = var.resource-group
 }
 
 resource "azurerm_subnet" "internal" {
   name                 = "internal"
-  resource_group_name  = azurerm_resource_group.example.name
+  resource_group_name  = var.resource-group
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = ["10.0.2.0/24"]
 }
 
 resource "azurerm_network_interface" "main" {
   name                = "${var.prefix}-nic"
-  location            = azurerm_resource_group.example.location
-  resource_group_name = azurerm_resource_group.example.name
+  location            = var.location
+  resource_group_name = var.resource-group
 
   ip_configuration {
     name                          = "testconfiguration1"
@@ -53,8 +48,8 @@ resource "azurerm_network_interface" "main" {
 
 resource "azurerm_virtual_machine" "main" {
   name                  = "${var.prefix}-vm"
-  location              = azurerm_resource_group.example.location
-  resource_group_name   = azurerm_resource_group.example.name
+  location              = var.location
+  resource_group_name   = var.resource-group
   network_interface_ids = [azurerm_network_interface.main.id]
   vm_size               = "Standard_DS1_v2"
 
@@ -71,14 +66,14 @@ resource "azurerm_virtual_machine" "main" {
     version   = "latest"
   }
   storage_os_disk {
-    name              = "myosdisk1"
+    name              = "test-vm_disk"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
   }
   os_profile {
     computer_name  = "hostname"
-    admin_username = "testadmin"
+    admin_username = "admin"
     admin_password = "Password1234!"
   }
   os_profile_linux_config {
