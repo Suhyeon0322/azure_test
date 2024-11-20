@@ -14,7 +14,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'init'
-        backendServiceArm: 'subscription1'  # Azure 서비스 연결 이름
+        backendServiceArm: 'test_serviceConnection'  # Azure 서비스 연결 이름
         backendAzureRmResourceGroupName: 'test_rg'  # 리소스 그룹 이름
         backendAzureRmStorageAccountName: 'test_storageAccount'  # 스토리지 계정 이름
         backendAzureRmContainerName: 'tfstate'  # 컨테이너 이름
@@ -25,7 +25,7 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'plan'
-        environmentServiceNameAzureRM: 'subscription1'  # Azure 서비스 연결 이름
+        environmentServiceNameAzureRM: 'test_serviceConnection'  # Azure 서비스 연결 이름
         commandOptions: '-out=tfplan'  # 계획 결과를 파일로 저장
 
     - task: TerraformTaskV4@4
@@ -33,5 +33,5 @@ stages:
       inputs:
         provider: 'azurerm'
         command: 'apply'
-        environmentServiceNameAzureRM: 'subscription1'  # Azure 서비스 연결 이름
+        environmentServiceNameAzureRM: 'test_serviceConnection'  # Azure 서비스 연결 이름
         commandOptions: '-auto-approve tfplan'  # 자동 승인 및 계획 파일 사용
