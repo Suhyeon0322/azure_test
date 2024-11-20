@@ -32,7 +32,6 @@ stages:
         provider: 'azurerm'
         command: 'plan'
         environmentServiceNameAzureRM: 'test_serviceConnection'  # Azure 서비스 연결 이름
-        commandOptions: '-out=tfplan'  # 계획 결과를 파일로 저장
 
     - task: TerraformTaskV4@4
       displayName: Terraform apply
@@ -40,4 +39,3 @@ stages:
         provider: 'azurerm'
         command: 'apply'
         environmentServiceNameAzureRM: 'test_serviceConnection'  # Azure 서비스 연결 이름
-        commandOptions: '-auto-approve tfplan'  # 자동 승인 및 계획 파일 사용
