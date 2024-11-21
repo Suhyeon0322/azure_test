@@ -1,5 +1,5 @@
 terraform {
-    required_providers {
+  required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
       version = "=3.0.0"
@@ -12,6 +12,12 @@ terraform {
     container_name       = "tfstate"                      
     key                  = "prod.terraform.tfstate"        
   }
+}
+
+# Configure the Microsoft Azure Provider
+provider "azurerm" {
+  features {}
+  subscription_id = "b8d06fc7-c92e-4a44-8a98-597f53734a95"  # subscription1
 }
 
 resource "azurerm_virtual_network" "example" {
