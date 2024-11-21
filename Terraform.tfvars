@@ -1,2 +1,2 @@
-location = "koreacentral"
-resource-group = "test-rg1"
+# location = "koreacentral"
+# resource-group = "test-rg1"

@@ -1,2 +1,2 @@
-variable "location" {}
-variable "resource-group" {}
+# variable "location" {}
+# variable "resource-group" {}
