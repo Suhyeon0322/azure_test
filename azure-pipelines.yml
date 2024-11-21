@@ -10,6 +10,16 @@ stages:
   - job: Build
     continueOnError: false
     steps:
+    - task: AzureCLI@2
+      displayName: Azure CLI
+      inputs:
+        azureSubscription: 'test_serviceConnection'
+        scriptType: ps
+        scriptLocation: inlineScript
+        inlineScript: |
+          az --version
+          az account show
+
     - task: TerraformInstaller@0
       displayName: Terraform install
       inputs:
